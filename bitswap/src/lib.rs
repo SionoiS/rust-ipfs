@@ -6,7 +6,6 @@ mod behaviour;
 mod block;
 mod error;
 mod ledger;
-mod prefix;
 mod protocol;
 
 pub use self::behaviour::{Bitswap, BitswapEvent, Stats};

@@ -1,7 +1,6 @@
 use crate::bitswap_pb;
 use crate::block::Block;
 use crate::error::BitswapError;
-use crate::prefix::Prefix;
 use cid::Cid;
 use core::convert::TryFrom;
 use hash_hasher::{HashedMap, HashedSet};
@@ -146,7 +145,7 @@ impl From<&Message> for Vec<u8> {
         }
         for block in val.blocks() {
             let payload = bitswap_pb::message::Block {
-                prefix: Prefix::from(block.cid()).to_bytes(),
+                prefix: block.cid().to_bytes(),
                 data: block.data().to_vec(),
             };
             proto.payload.push(payload);
@@ -194,8 +193,7 @@ impl TryFrom<&[u8]> for Message {
             }
         }
         for payload in proto.payload {
-            let prefix = Prefix::new(&payload.prefix)?;
-            let cid = prefix.to_cid(&payload.data)?;
+            let cid = Cid::try_from(payload.prefix)?;
             let block = Block {
                 cid,
                 data: payload.data.into_boxed_slice(),
