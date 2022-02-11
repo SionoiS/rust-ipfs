@@ -259,7 +259,7 @@ impl NetworkBehaviour for Bitswap {
 
         debug!("bitswap: inject_event from {}: {:?}", source, message);
 
-        let current_wantlist = self.local_wantlist();
+        //let current_wantlist = self.local_wantlist();
 
         let ledger = self
             .connected_peers
@@ -276,10 +276,8 @@ impl NetworkBehaviour for Bitswap {
         }
 
         // Process the incoming wantlist.
-        for (cid, priority) in message
-            .want()
-            .iter()
-            .filter(|&(cid, _)| !current_wantlist.iter().map(|(c, _)| c).any(|c| c == cid))
+        for (cid, priority) in message.want().iter()
+        //.filter(|&(cid, _)| !current_wantlist.iter().map(|(c, _)| c).any(|c| c == cid))
         {
             ledger.received_want_list.insert(*cid, *priority);
 
